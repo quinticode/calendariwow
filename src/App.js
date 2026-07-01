@@ -14,9 +14,10 @@ function App() {
 
         <Routes>
           <Route path='/' element={<LayoutPublico />}>
-            <Route path='home' element={<Home />}> </Route>
-            <Route path='sobre' element={<Sobre />}> </Route>
-            <Route path='registrar' element={<FormRegistrar/>}> </Route>
+            <Route index element={<Home />} />
+            <Route path='home' element={<Home />} />
+            <Route path='sobre' element={<Sobre />} />
+            <Route path='registrar' element={<FormRegistrar/>} />
           </Route>
         </Routes>
         

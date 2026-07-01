@@ -1,5 +1,6 @@
 import { useState } from "react";
 import TextoLegal from "../components/TextoLegal";
+import { registrarUsuario } from "../services/registrarService";
 
 
 export default function FormRegistrar(){
@@ -14,6 +15,8 @@ export default function FormRegistrar(){
     const [formDados, setFormDados] = useState(dadosPadrao);
 
     const [enviado, setEnviado] = useState(false);
+    const [erro, setErro] = useState("");
+    const [carregando, setCarregando] = useState(false);
 
     // pega o ""objeto"" do evento de quando alguem digita, salva as informações q tao na const
     //
@@ -26,22 +29,33 @@ export default function FormRegistrar(){
         }));
     }
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
+
         e.preventDefault();
-        console.log("Dados Enviados: ", formDados);
-        setEnviado(true);
+        setErro("");
+        setCarregando(true);
+
+        try {
+            await registrarUsuario(formDados);
+            setEnviado(true);
+        } catch (err) {
+            setErro(err.message);
+        } finally {
+            setCarregando(false);
+        }
     }
 
     function handleReset() {
         setFormDados(dadosPadrao)
         setEnviado(false)
+        setErro("");
     }
 
     if(enviado){
         return(
             <div>
                 <h2>Cadastro Realizado!</h2>
-                <p>{formDados.nome}, seu email {formDados.email} foi registrado com sucesso! </p>
+                <p style={{color: "green" }}>{formDados.nome}, seu email {formDados.email} foi registrado com sucesso! </p>
                 <button onClick={handleReset}>Novo cadastro</button>
             </div>
         )
@@ -50,6 +64,9 @@ export default function FormRegistrar(){
     return(
         <div>
             <TextoLegal conteudo="Cadastre-se!" tamanho="4rem"/>
+
+            {erro && <p style={{color: "red" }}>{erro}</p>}
+
             <form onSubmit={handleSubmit}>
                 <div>
 
@@ -80,9 +97,7 @@ export default function FormRegistrar(){
                         name="idade"
                         value={formDados.idade}
                         onChange={handleChange}
-                        placeholder="digite sua idade em anos"
-                        min={"1"}
-                        max={"120"}
+                        placeholder="digite sua idade em anos"  
                     />
 
                     <input
@@ -91,12 +106,11 @@ export default function FormRegistrar(){
                         name="aceiteTermos"
                         value={formDados.aceiteTermos}
                         onChange={handleChange}
-                        required
                     />
                     <label htmlFor="aceiteTermos">Aceito os termos de uso</label>
                 </div>
 
-                <button type="submit">Cadastrar</button>
+                <button type="submit">Registrar</button>
             </form>
 
             <div>
