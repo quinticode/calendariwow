@@ -14,6 +14,7 @@ export default function LayoutPublico(){
             <hr />
 
             <Outlet />
+            
         </div>
     )
 }
