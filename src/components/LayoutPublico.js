@@ -7,7 +7,7 @@ export default function LayoutPublico(){
     return(
         <div>
             <nav>
-                <Link to="/"><TextoLegal conteudo="Página Inicial" /></Link>
+                <Link to="/home"><TextoLegal conteudo="Página Inicial" /></Link>
                 <Link to="/sobre"><TextoLegal conteudo="Sobre" /></Link>
             </nav>
 

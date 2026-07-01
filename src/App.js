@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Sobre from './pages/Sobre'
 import { BrowserRouter, Route, Routes, Outlet,  } from 'react-router-dom';
 import LayoutPublico from './components/LayoutPublico';
+import FormRegistrar from './pages/FormRegistrar';
 
 function App() {
   return (
@@ -13,8 +14,9 @@ function App() {
 
         <Routes>
           <Route path='/' element={<LayoutPublico />}>
-            <Route index element={<Home />}></Route>
-            <Route path='sobre' element={<Sobre />}></Route>
+            <Route path='home' element={<Home />}> </Route>
+            <Route path='sobre' element={<Sobre />}> </Route>
+            <Route path='registrar' element={<FormRegistrar/>}> </Route>
           </Route>
         </Routes>
         
