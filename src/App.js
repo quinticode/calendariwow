@@ -1,12 +1,13 @@
 import './App.css';
-import TextoLegal from './TextoLegal';
+import TextoLegal from './components/TextoLegal';
+import Contador from './components/Contador';
+import OutroContador from './components/OutroContador';
+import Home from './pages/Home';
 
 function App() {
   return (
     <div className="App">
-      <TextoLegal tamanho={15} conteudo={"OIOI"}/>
-      <TextoLegal tamanho={40} conteudo={"TESTE"}/>
-      <TextoLegal tamanho={100}/>
+      <Home />
     </div>
   );
 }
