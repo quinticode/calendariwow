@@ -1,7 +1,6 @@
 import { use, useState } from "react";
 import TextoLegal from "../components/TextoLegal";
 import Contador from "../components/Contador";
-import OutroContador from "../components/OutroContador";
 
 export default function Home(){
     const [contador, setContador] = useState(0);
