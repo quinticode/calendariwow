@@ -9,6 +9,7 @@ import FormRegistrar from './pages/FormRegistrar';
 import UsuariosPage from './pages/UsuariosPage';
 import LoginPage from './pages/LoginPage';
 import PrivateRoute from './components/PrivateRoute';
+import UploadPage from './pages/UploadPage';
 
 function App() {
   return (
@@ -31,6 +32,15 @@ function App() {
                 element={
                   <PrivateRoute>
                     <UsuariosPage />
+                  </PrivateRoute>
+                }
+            />
+
+            <Route 
+              path="upload"
+                element={
+                  <PrivateRoute>
+                    <UploadPage />
                   </PrivateRoute>
                 }
             />
