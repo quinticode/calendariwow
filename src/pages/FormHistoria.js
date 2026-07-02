@@ -103,7 +103,6 @@ export default function FormHistoria() {
               value={formDados.titulo}
               onChange={handleChange}
               placeholder="Título da história"
-              required
             />
           </div>
 
@@ -120,7 +119,6 @@ export default function FormHistoria() {
               value={formDados.genero}
               onChange={handleChange}
               placeholder="Ex.: Terror, Romance, Fantasia"
-              required
             />
           </div>
 
@@ -137,7 +135,6 @@ export default function FormHistoria() {
               onChange={handleChange}
               placeholder="Era uma vez..."
               rows={10}
-              required
             />
           </div>
 
