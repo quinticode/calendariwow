@@ -2,7 +2,6 @@ export async function registrarUsuario(dados) {
 
     validarDados(dados);
 
-
     const resposta = await fetch("http://localhost:3001/registrar", {
         method: "POST",
         headers: {
@@ -27,6 +26,7 @@ export async function registrarUsuario(dados) {
 
 function validarDados(dados){
     const erros = [];
+    const regexSenha = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/;
 
     if (!dados.nome?.trim())
         erros.push("Nome é obrigatório!")
@@ -34,9 +34,10 @@ function validarDados(dados){
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(dados.email))
         erros.push("Email inválido!")
 
-    if (!dados.senha || dados.senha.length < 3)
-        erros.push("Senha muito curta!")
+    if (!regexSenha.test(dados.senha)) {
+        erros.push("A senha precisa de números e letras!")
+    }
 
     if (erros.length > 0)
-        throw new Error(erros.join(" - "));
+        throw new Error(erros.join(" ; "));
 }

@@ -105,6 +105,17 @@ app.post("/login", async (req, res) => {
     res.json({ token })
 });
 
+app.get("/usuarios", async (req, res) => {
+    try {
+        const usuarios = await Usuario.findAll({
+            attributes: ['id', 'nome', 'email', 'createdAt']
+        });
+        res.json(usuarios);
+    } catch (error) {
+        res.status(500).json({ erro: "Erro ao buscar a lista de usuários." });
+    }
+});
+
 // Rotas de Histórias
 app.post("/historias", authMiddleware, async (req, res) => {
     try {

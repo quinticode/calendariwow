@@ -90,7 +90,6 @@ export default function FormRegistrar() {
               value={formDados.nome}
               onChange={handleChange}
               placeholder="Digite seu nome"
-              required
             />
           </div>
 
@@ -107,7 +106,6 @@ export default function FormRegistrar() {
               value={formDados.email}
               onChange={handleChange}
               placeholder="Digite seu e-mail"
-              required
             />
           </div>
 
@@ -124,7 +122,6 @@ export default function FormRegistrar() {
               value={formDados.senha}
               onChange={handleChange}
               placeholder="Digite sua senha"
-              required
             />
           </div>
         </div>
