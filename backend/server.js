@@ -110,15 +110,11 @@ app.post("/login", async (req, res) => {
 
     const usuario = await Usuario.findOne({ where: { email } });
 
-    if(!usuario || usuario.senha !== senha) {
-        return res.status(401).json({ erro: "Usuário ou senha inválidos."});
-    }
-
     const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
     if (!senhaCorreta) {
             return res.status(401).json({ erro: "Usuário ou senha inválidos." });
     }
-    
+
     const token = jwt.sign({email: usuario.email }, SECRET, { expiresIn: "1h" })
     res.json({ token })
 });
