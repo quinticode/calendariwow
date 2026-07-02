@@ -1,4 +1,4 @@
-export async function publicarHistoria(dados) {
+export async function publicarHistoria(dados, token) {
     validarHistoria(dados);
 
 
@@ -6,12 +6,12 @@ export async function publicarHistoria(dados) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify(dados),
     });
 
     const dadosServidor = await resposta.json();
-
 
     if (!resposta.ok) {
         throw new Error(dadosServidor.erro || "Não foi possível publicar a história.");
@@ -20,16 +20,14 @@ export async function publicarHistoria(dados) {
     return dadosServidor;
 }
 
-
 function validarHistoria(dados) {
     const erros = [];
 
     if (!dados.titulo?.trim()) erros.push("O título é obrigatório!");
-    if (!dados.autor?.trim()) erros.push("O nome do autor é obrigatório!");
     if (!dados.genero?.trim()) erros.push("O gênero é obrigatório!");
     
-    if (!dados.texto?.trim() || dados.texto.trim().length < 50) {
-        erros.push("Sua história está muito curta! Escreva pelo menos 50 caracteres.");
+    if (!dados.texto?.trim() || dados.texto.trim().length < 30) {
+        erros.push("Sua história está muito curta! Escreva pelo menos 30 caracteres.");
     }
 
     if (erros.length > 0) {

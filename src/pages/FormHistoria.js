@@ -7,7 +7,6 @@ export default function FormHistoria() {
     const navigate = useNavigate();
 
     const [formDados, setFormDados] = useState({
-        autor: "",
         titulo: "",
         texto: "",
         imagem: "",
@@ -31,12 +30,20 @@ export default function FormHistoria() {
         e.preventDefault();
         setCarregando(true); 
 
+
+        const token = localStorage.getItem("token"); 
         let urlDaImagem = "";
 
         try {
 
+            if (!formDados.titulo?.trim()) throw new Error("O título é obrigatório!");
+            if (!formDados.genero?.trim()) throw new Error("O gênero é obrigatório!");
+            if (!formDados.texto?.trim() || formDados.texto.trim().length < 30) {
+                throw new Error("Sua história está muito curta! Escreva pelo menos 30 caracteres.");
+            }
+
+
             if (imagemFile) {
-                const token = localStorage.getItem("token"); 
                 const resultadoUpload = await enviarImagem(imagemFile, token);
 
                 if (resultadoUpload && resultadoUpload.url) {
@@ -52,13 +59,12 @@ export default function FormHistoria() {
             };
 
 
-            await publicarHistoria(dadosParaEnviar);
+            await publicarHistoria(dadosParaEnviar, token);
 
             alert("História publicada com sucesso!");
             navigate("/historias"); 
 
         } catch (error) {
-
             alert(error.message); 
         } finally {
             setCarregando(false); 
@@ -70,7 +76,6 @@ export default function FormHistoria() {
             <h2>Escrever Nova História</h2>
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
                 <input name="titulo" placeholder="Título da História" onChange={handleChange} required />
-                <input name="autor" placeholder="Nome do Autor" onChange={handleChange} required />
                 <input name="genero" placeholder="Gênero (ex: Terror, Romance)" onChange={handleChange} required />
                 
                 <textarea 

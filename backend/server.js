@@ -106,9 +106,25 @@ app.post("/login", async (req, res) => {
 });
 
 // Rotas de Histórias
-app.post("/historias", async (req, res) => {
+app.post("/historias", authMiddleware, async (req, res) => {
     try {
-        const novaHistoria = await Historia.create(req.body);
+
+        const usuarioLogado = await Usuario.findOne({ where: { email: req.usuario.email } });
+        
+        if (!usuarioLogado) {
+            return res.status(401).json({ erro: "Utilizador não encontrado." });
+        }
+
+        const { titulo, texto, imagem, genero } = req.body;
+
+        const novaHistoria = await Historia.create({
+            titulo,
+            texto,
+            imagem,
+            genero,
+            autor: usuarioLogado.nome
+        });
+
         res.json({ sucesso: true, historia: novaHistoria });
     } catch (error) {
         res.status(500).json({ erro: "Erro ao salvar a história." });
