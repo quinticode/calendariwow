@@ -11,6 +11,7 @@ export default function LayoutPublico(){
                 <Link to="/sobre"><TextoLegal conteudo="Sobre" /></Link>
                 <Link to="/registrar"><TextoLegal conteudo="Registrar Conta" /></Link>
                 <Link to="/usuarios"><TextoLegal conteudo="Usuários" /></Link>
+                <Link to="/upload"><TextoLegal conteudo="upload de imagem"></TextoLegal></Link>
             </nav>
 
             <hr />

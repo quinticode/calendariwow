@@ -1,8 +1,14 @@
 const express = require("express");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
+
 const multer = require("multer");
 const path = require("path");
+
+const database = require("./database/database");
+const Usuario = require("./models/Usuario")
+
+database.sync();
 
 const app = express();
 
@@ -77,24 +83,33 @@ const usuarioFake = {
     senha: "123456"
 };
 
-app.post("/login", (req, res) => {
+app.post("/registrar", async (req, res) => {
+    try {
+        const { nome, email, senha } = req.body;
+
+        const usuarioExiste = await Usuario.findOne({ where: { email } });
+
+        if (usuarioExiste) {
+            return res.status(400).json({ erro: "Este e-mail já está cadastrado." })
+        }
+
+        const novoUsuario = await Usuario.create({nome, email, senha });
+        res.json({ sucesso: true, mensagem: "Usuário cadastrado com sucesso!"});
+    } catch (error) {
+        res.status(500).json({ erro: "Erro ao salvar no banco de dados." });
+    }
+});
+
+app.post("/login", async (req, res) => {
     const {email,senha} = req.body;
 
-    if(
-        email !== usuarioFake.email || 
-        senha !== usuarioFake.senha
-    ){
-        return res.status(401).json({
-            erro: "Usuário inválido"
-        });
+    const usuario = await Usuario.findOne({ where: { email } });
+
+    if(!usuario || usuario.senha !== senha) {
+        return res.status(401).json({ erro: "Usuário ou senha inválidos."});
     }
 
-    const token = jwt.sign( 
-    {email},
-    SECRET,
-    {expiresIn: "1h" }
-    );
-
+    const token = jwt.sign({email: usuario.email }, SECRET, { expiresIn: "1h" })
     res.json({ token })
 });
 
