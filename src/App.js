@@ -10,6 +10,7 @@ import UsuariosPage from './pages/UsuariosPage';
 import LoginPage from './pages/LoginPage';
 import PrivateRoute from './components/PrivateRoute';
 import UploadPage from './pages/UploadPage';
+import HistoriasPage from './pages/HistoriasPage';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path='sobre' element={<Sobre />} />
             <Route path='registrar' element={<FormRegistrar/>} />
             <Route path='login' element={<LoginPage />} />
+            <Route path='historias' element={<HistoriasPage />} />
 
           {/* rotas privadas */}
             <Route 
@@ -41,6 +43,15 @@ function App() {
                 element={
                   <PrivateRoute>
                     <UploadPage />
+                  </PrivateRoute>
+                }
+            />
+
+            <Route 
+              path="formHistoria"
+                element={
+                  <PrivateRoute>
+                    <formHistoria />
                   </PrivateRoute>
                 }
             />

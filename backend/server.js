@@ -84,7 +84,7 @@ const usuarioFake = {
     senha: "123456"
 };
 
-// ROTAS DE FETCH
+// ROTAS DE USUARIO
 
 app.post("/registrar", async (req, res) => {
     try {
@@ -121,4 +121,24 @@ app.post("/login", async (req, res) => {
 
 app.listen(3001, () => {
     console.log("Servidor rodando na porta 3001");
+});
+
+// ROTAS DE HISTÓRIAS
+
+app.post("/historias", async (req, res) => {
+    try {
+        const novaHistoria = await Historia.create(req.body);
+        res.json({ sucesso: true, historia: novaHistoria });
+    } catch (error) {
+        res.status(500).json({ erro: "Erro ao salvar a história." });
+    }
+});
+
+app.get("/historias", async (req, res) => {
+    try {
+        const historias = await Historia.findAll();
+        res.json(historias);
+    } catch (error) {
+        res.status(500).json({ erro: "Erro ao carregar histórias." });
+    }
 });
