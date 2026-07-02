@@ -34,7 +34,7 @@ export default function HistoriasPage() {
         <div>
           <h1 className="page-title">Biblioteca de Histórias</h1>
           <p className="page-description">
-            Explore histórias criadas pela comunidade.
+            Explore histórias criadas pela galera
           </p>
         </div>
 

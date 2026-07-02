@@ -81,7 +81,7 @@ export default function LerHistoria() {
   return (
     <article className="reading-page">
       <Link className="back-link" to="/historias">
-        ← Voltar para a biblioteca
+        - Voltar para a biblioteca
       </Link>
 
       <header className="reading-header">
