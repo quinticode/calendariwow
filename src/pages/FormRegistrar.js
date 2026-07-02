@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TextoLegal from "../components/TextoLegal";
 import { registrarUsuario } from "../services/registrarService";
+import { Link } from "react-router-dom";
 
 
 export default function FormRegistrar(){
+
+    useEffect(() => {handleReset()},[])
 
     const dadosPadrao = {
         nome: "",
@@ -53,9 +56,9 @@ export default function FormRegistrar(){
     if(enviado){
         return(
             <div>
-                <h2>Cadastro Realizado!</h2>
+                <TextoLegal conteudo="Cadastro Realizado!" tamanho="5rem" />
                 <p style={{color: "green" }}>{formDados.nome}, seu email {formDados.email} foi registrado com sucesso! </p>
-                <button onClick={handleReset}>Novo cadastro</button>
+                <Link to="/historias"><button>Ver histórias!</button></Link>
             </div>
         )
     }
@@ -104,13 +107,15 @@ export default function FormRegistrar(){
                 <button type="submit">Registrar</button>
             </form>
 
+            <Link to="/login"><h4>Já possui uma conta?</h4></Link>
+
             {/* 
             <div>
                 <TextoLegal tamanho="1rem" conteudo="conteudo do formulario"/>
                 <pre>{JSON.stringify(formDados, null, 2)}</pre>
             </div>
             */}
-            
+
         </div>
        
     )

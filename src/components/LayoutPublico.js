@@ -6,7 +6,7 @@ export default function LayoutPublico() {
     <>
       <header className="app-header">
         <Link to="/" className="app-logo">
-          CalendariWow
+          Historiólas ;)
         </Link>
         
         <nav className="nav-links">

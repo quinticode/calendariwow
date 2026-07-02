@@ -8,7 +8,7 @@ export default function Home(){
 
     return (
     <>
-      <TextoLegal tamanho={"10rem"} conteudo={"Historiólas"}/>
+      <TextoLegal tamanho={"9rem"} conteudo={"Historiólas ;)"}/>
       <TextoLegal tamanho={"3rem"} conteudo={"Compartilhe e leia histórias!"}/>
 
 
