@@ -10,15 +10,16 @@ const database = require("./database/database");
 const Usuario = require("./models/Usuario");
 const Historia = require("./models/Historia");
 
-database.sync()
+database.sync();
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-const SECRET = "segredo_jwt"
+const SECRET = "segredo_jwt";
 
+// CONFIGURAÇÕES DO MULTER
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, "uploads/");
@@ -49,7 +50,7 @@ function authMiddleware(req, res, next) {
     if (!authHeader) return res.status(401).json({ erro: "Token ausente." });
 
     const token = authHeader.split(" ")[1];
-    try{
+    try {
         req.usuario = jwt.verify(token, SECRET);
         next();
     } catch {
@@ -57,40 +58,22 @@ function authMiddleware(req, res, next) {
     }
 }
 
-    app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-    app.post(
-        "/upload",
-        authMiddleware,
-        upload.single("imagem"),
-        (req, res) => {
-            if (!req.file) {
-                return res.status(400).json({ erro: "Nenhum arquivo recebido." });
-            }
 
-            const url = `http://localhost:3001/uploads/${req.file.filename}`;
-            res.json({ url });
-        }
-    );
+// TODAS AS ROTAS
 
-    app.use((err, req, res, _next) => {
-        if (err instanceof multer.MulterError || err.message) {
-            return res.status(400).json({ erro: err.message });
-        }
-        res.status(500).json({ erro: "Erro interno." });
-    })
-
-const usuarioFake = {
-    email: "admin@email.com",
-    senha: "123456"
-};
-
-// ROTAS DE USUARIO
+app.post("/upload", authMiddleware, upload.single("imagem"), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ erro: "Nenhum arquivo recebido." });
+    }
+    const url = `http://localhost:3001/uploads/${req.file.filename}`;
+    res.json({ url });
+});
 
 app.post("/registrar", async (req, res) => {
     try {
         const { nome, email, senha } = req.body;
-
         const usuarioExiste = await Usuario.findOne({ where: { email } });
 
         if (usuarioExiste) {
@@ -98,8 +81,7 @@ app.post("/registrar", async (req, res) => {
         }
 
         const senhaCriptografada = await bcrypt.hash(senha, 10);
-
-        const novoUsuario = await Usuario.create({nome, email, senha: senhaCriptografada });
+        await Usuario.create({nome, email, senha: senhaCriptografada });
         res.json({ sucesso: true, mensagem: "Usuário cadastrado com sucesso!"});
     } catch (error) {
         res.status(500).json({ erro: "Erro ao salvar no banco de dados." });
@@ -108,24 +90,22 @@ app.post("/registrar", async (req, res) => {
 
 app.post("/login", async (req, res) => {
     const {email,senha} = req.body;
-
     const usuario = await Usuario.findOne({ where: { email } });
+
+    if (!usuario) {
+        return res.status(401).json({ erro: "Usuário ou senha inválidos." });
+    }
 
     const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
     if (!senhaCorreta) {
-            return res.status(401).json({ erro: "Usuário ou senha inválidos." });
+        return res.status(401).json({ erro: "Usuário ou senha inválidos." });
     }
 
     const token = jwt.sign({email: usuario.email }, SECRET, { expiresIn: "1h" })
     res.json({ token })
 });
 
-app.listen(3001, () => {
-    console.log("Servidor rodando na porta 3001");
-});
-
-// ROTAS DE HISTÓRIAS
-
+// Rotas de Histórias
 app.post("/historias", async (req, res) => {
     try {
         const novaHistoria = await Historia.create(req.body);
@@ -144,12 +124,9 @@ app.get("/historias", async (req, res) => {
     }
 });
 
-//pagina da historia individual
 app.get("/historias/:id", async (req, res) => {
     try {
-
         const historia = await Historia.findByPk(req.params.id);
-        
         if (!historia) {
             return res.status(404).json({ erro: "História não encontrada." });
         }
@@ -157,4 +134,16 @@ app.get("/historias/:id", async (req, res) => {
     } catch (error) {
         res.status(500).json({ erro: "Erro ao buscar a história." });
     }
+});
+
+
+app.use((err, req, res, _next) => {
+    if (err instanceof multer.MulterError || err.message) {
+        return res.status(400).json({ erro: err.message });
+    }
+    res.status(500).json({ erro: "Erro interno." });
+})
+
+app.listen(3001, () => {
+    console.log("Servidor rodando na porta 3001");
 });

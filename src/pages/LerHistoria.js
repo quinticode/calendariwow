@@ -9,7 +9,11 @@ export default function LerHistoria() {
         fetch(`http://localhost:3001/historias/${id}`)
             .then(resposta => resposta.json())
             .then(dados => setHistoria(dados))
-            .catch(erro => console.log("Erro:", erro));
+            .catch(erro => {
+                console.log("Erro:", erro);
+
+                setHistoria({ erro: "Não foi possível carregar a história." });
+            });
     }, [id]);
 
     if (!historia) return <div style={{ padding: "20px" }}>Carregando história...</div>;
@@ -35,7 +39,7 @@ export default function LerHistoria() {
                 />
             )}
             
-            {/*'pre-wrap' garante que as quebras de linha que o usuário digitou no texto sejam respeitadas! */}
+            {/*'pre-wrap' deixa q as quebras de linha digitadas permaneçam */}
             <div style={{ whiteSpace: "pre-wrap", lineHeight: "1.8", fontSize: "1.1rem", color: "#333" }}>
                 {historia.texto}
             </div>
