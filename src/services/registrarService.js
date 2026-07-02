@@ -1,16 +1,28 @@
-export async function registrarUsuario(dados){
-    validarDados(dados)
+export async function registrarUsuario(dados) {
+
+    validarDados(dados);
 
 
-    //mudar isso aqui futuramente
-    await new Promise((res) => setTimeout(res, 800));
+    const resposta = await fetch("http://localhost:3001/registrar", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            nome: dados.nome,
+            email: dados.email,
+            senha: dados.senha
+        }),
+    });
+
+    const dadosServidor = await resposta.json();
 
 
-    return {
-        sucesso: true,
-        id: Math.random().toString(36).slice(2,9),
-        mensagem: `Usuário ${dados.nome} cadastrado com sucesso com o email ${dados.email} !`
-    };
+    if (!resposta.ok) {
+        throw new Error(dadosServidor.erro || "Erro ao cadastrar.");
+    }
+
+    return dadosServidor;
 }
 
 function validarDados(dados){
@@ -22,11 +34,8 @@ function validarDados(dados){
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(dados.email))
         erros.push("Email inválido!")
 
-    if (!dados.idade || dados.idade < 1 || dados.idade > 120)
-        erros.push("Idade inválida!")
-
-    if (!dados.aceiteTermos)
-        erros.push("Você deve aceitar os termos!")
+    if (!dados.senha || dados.senha.length < 3)
+        erros.push("Senha muito curta!")
 
     if (erros.length > 0)
         throw new Error(erros.join(" - "));

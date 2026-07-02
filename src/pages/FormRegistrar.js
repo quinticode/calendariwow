@@ -8,8 +8,7 @@ export default function FormRegistrar(){
     const dadosPadrao = {
         nome: "",
         email: "",
-        idade: "",
-        aceiteTermos: false
+        senha: ""
     }
     
     const [formDados, setFormDados] = useState(dadosPadrao);
@@ -90,24 +89,16 @@ export default function FormRegistrar(){
                         placeholder="digite seu email"
                     />
 
-                    <label htmlFor="idade">Idade:</label>
+                    <label htmlFor="senha">senha:</label>
                     <input
-                        type="number"
-                        id="idade"
-                        name="idade"
-                        value={formDados.idade}
+                        type="senha"
+                        id="senha"
+                        name="senha"
+                        value={formDados.senha}
                         onChange={handleChange}
-                        placeholder="digite sua idade em anos"  
+                        placeholder="digite sua senha"
                     />
 
-                    <input
-                        type="checkbox"
-                        id="aceiteTermos"
-                        name="aceiteTermos"
-                        value={formDados.aceiteTermos}
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="aceiteTermos">Aceito os termos de uso</label>
                 </div>
 
                 <button type="submit">Registrar</button>

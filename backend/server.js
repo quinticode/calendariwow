@@ -8,7 +8,7 @@ const path = require("path");
 const database = require("./database/database");
 const Usuario = require("./models/Usuario")
 
-database.sync();
+database.sync()
 
 const app = express();
 
