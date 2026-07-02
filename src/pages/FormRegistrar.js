@@ -104,10 +104,13 @@ export default function FormRegistrar(){
                 <button type="submit">Registrar</button>
             </form>
 
+            {/* 
             <div>
                 <TextoLegal tamanho="1rem" conteudo="conteudo do formulario"/>
                 <pre>{JSON.stringify(formDados, null, 2)}</pre>
             </div>
+            */}
+            
         </div>
        
     )

@@ -1,9 +1,17 @@
 /* --- RESET E CONFIGURAÇÃO GLOBAL --- */
+@font-face {
+  font-family: 'Pou-Font'; /* Nome que você vai usar para chamá-la */
+  src: url('./fonts/Pou-Font.ttf') format('truetype'); /* Caminho do arquivo */
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* 2. Aplica a fonte em absolutamente todos os elementos do aplicativo */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Pou-Font', 'Segoe UI', sans-serif;
 }
 
 .App {

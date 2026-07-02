@@ -8,11 +8,13 @@ export default function Home(){
 
     return (
     <>
-      <TextoLegal tamanho={"2rem"} conteudo={"OIOI"}/>
-      <TextoLegal tamanho={"10rem"} conteudo={"HOME"}/>
+      <TextoLegal tamanho={"10rem"} conteudo={"Historiólas"}/>
+      <TextoLegal tamanho={"3rem"} conteudo={"Compartilhe e leia histórias!"}/>
+
+
       {/* <Contador valor={contador} setValor={setContador} emoji="Aumentar" modo="incremento"/>
       <Contador valor={contador} setValor={setContador} emoji="Diminuir" modo="decremento"/> */}
-      <p>Salve suas histórias! Comece criando sua conta!</p>
+      <p style={{fontSize:"1.5rem"}}>Salve suas histórias! Comece criando sua conta!</p>
 
       <Link to="/registrar"><button>Registrar Conta</button></Link>
       <Link to="/login"><button>Logar conta</button></Link>
