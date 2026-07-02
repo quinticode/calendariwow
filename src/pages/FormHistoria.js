@@ -1,108 +1,180 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { enviarImagem } from "../services/uploadService"; 
+import { enviarImagem } from "../services/uploadService";
 import { publicarHistoria } from "../services/historiaService";
 
 export default function FormHistoria() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const [formDados, setFormDados] = useState({
-        titulo: "",
-        texto: "",
-        imagem: "",
-        genero: ""
-    });
+  const [formDados, setFormDados] = useState({
+    titulo: "",
+    texto: "",
+    genero: ""
+  });
 
-    const [imagemFile, setImagemFile] = useState(null); 
-    const [carregando, setCarregando] = useState(false); 
+  const [imagemFile, setImagemFile] = useState(null);
+  const [carregando, setCarregando] = useState(false);
+  const [erro, setErro] = useState("");
 
-    function handleChange(e) {
-        setFormDados({ ...formDados, [e.target.name]: e.target.value });
-    }
+  function handleChange(e) {
+    const { name, value } = e.target;
 
-    function handleFileChange(e) {
-        if (e.target.files && e.target.files.length > 0) {
-            setImagemFile(e.target.files[0]);
+    setFormDados((dadosAnteriores) => ({
+      ...dadosAnteriores,
+      [name]: value
+    }));
+  }
+
+  function handleFileChange(e) {
+    const arquivo = e.target.files?.[0] || null;
+    setImagemFile(arquivo);
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    setErro("");
+    setCarregando(true);
+
+    const token = localStorage.getItem("token");
+    let urlDaImagem = "";
+
+    try {
+      if (!token) {
+        throw new Error("Você precisa estar logado para publicar uma história.");
+      }
+
+      if (!formDados.titulo.trim()) {
+        throw new Error("O título é obrigatório.");
+      }
+
+      if (!formDados.genero.trim()) {
+        throw new Error("O gênero é obrigatório.");
+      }
+
+      if (formDados.texto.trim().length < 30) {
+        throw new Error(
+          "Sua história está muito curta. Escreva pelo menos 30 caracteres."
+        );
+      }
+
+      if (imagemFile) {
+        const resultadoUpload = await enviarImagem(imagemFile, token);
+
+        if (!resultadoUpload?.url) {
+          throw new Error("Não foi possível enviar a imagem da capa.");
         }
+
+        urlDaImagem = resultadoUpload.url;
+      }
+
+      await publicarHistoria(
+        {
+          ...formDados,
+          imagem: urlDaImagem
+        },
+        token
+      );
+
+      navigate("/historias");
+    } catch (error) {
+      setErro(error.message || "Não foi possível publicar a história.");
+    } finally {
+      setCarregando(false);
     }
+  }
 
-    async function handleSubmit(e) {
-        e.preventDefault();
-        setCarregando(true); 
+  return (
+    <section className="form-page form-page--wide">
+      <h1 className="page-title">Escrever nova história</h1>
 
+      <form className="form-card form-card--wide" onSubmit={handleSubmit}>
+        <div className="form-fields">
+          <div className="form-group">
+            <label className="form-label" htmlFor="titulo">
+              Título
+            </label>
 
-        const token = localStorage.getItem("token"); 
-        let urlDaImagem = "";
+            <input
+              className="form-input"
+              type="text"
+              id="titulo"
+              name="titulo"
+              value={formDados.titulo}
+              onChange={handleChange}
+              placeholder="Título da história"
+              required
+            />
+          </div>
 
-        try {
+          <div className="form-group">
+            <label className="form-label" htmlFor="genero">
+              Gênero
+            </label>
 
-            if (!formDados.titulo?.trim()) throw new Error("O título é obrigatório!");
-            if (!formDados.genero?.trim()) throw new Error("O gênero é obrigatório!");
-            if (!formDados.texto?.trim() || formDados.texto.trim().length < 30) {
-                throw new Error("Sua história está muito curta! Escreva pelo menos 30 caracteres.");
-            }
+            <input
+              className="form-input"
+              type="text"
+              id="genero"
+              name="genero"
+              value={formDados.genero}
+              onChange={handleChange}
+              placeholder="Ex.: Terror, Romance, Fantasia"
+              required
+            />
+          </div>
 
+          <div className="form-group">
+            <label className="form-label" htmlFor="texto">
+              História
+            </label>
 
-            if (imagemFile) {
-                const resultadoUpload = await enviarImagem(imagemFile, token);
+            <textarea
+              className="form-input form-textarea"
+              id="texto"
+              name="texto"
+              value={formDados.texto}
+              onChange={handleChange}
+              placeholder="Era uma vez..."
+              rows={10}
+              required
+            />
+          </div>
 
-                if (resultadoUpload && resultadoUpload.url) {
-                    urlDaImagem = resultadoUpload.url; 
-                } else {
-                    throw new Error("Erro ao fazer o upload da imagem da capa.");
-                }
-            }
+          <div className="form-group">
+            <label className="form-label" htmlFor="imagem">
+              Capa da história{" "}
+              <span className="form-optional">(opcional)</span>
+            </label>
 
-            const dadosParaEnviar = {
-                ...formDados,
-                imagem: urlDaImagem
-            };
+            <input
+              className="form-file-input"
+              type="file"
+              id="imagem"
+              accept="image/jpeg,image/png,image/gif,image/webp"
+              onChange={handleFileChange}
+            />
 
-
-            await publicarHistoria(dadosParaEnviar, token);
-
-            alert("História publicada com sucesso!");
-            navigate("/historias"); 
-
-        } catch (error) {
-            alert(error.message); 
-        } finally {
-            setCarregando(false); 
-        }
-    }
-
-    return (
-        <div style={{ padding: "20px", maxWidth: "600px", margin: "0 auto" }}>
-            <h2>Escrever Nova História</h2>
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-                <input name="titulo" placeholder="Título da História" onChange={handleChange} required />
-                <input name="genero" placeholder="Gênero (ex: Terror, Romance)" onChange={handleChange} required />
-                
-                <textarea 
-                    name="texto" 
-                    placeholder="Era uma vez..." 
-                    rows="8" 
-                    onChange={handleChange} 
-                    required 
-                    style={{ padding: "10px", borderRadius: "6px", border: "1px solid #e2e8f0", fontFamily: "inherit", resize: "vertical" }}
-                />
-                
-                <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-                    <label style={{ fontSize: "0.9rem", color: "#555", fontWeight: "600" }}>
-                        Capa da História (Opcional)
-                    </label>
-                    <input 
-                        type="file" 
-                        accept="image/*" 
-                        onChange={handleFileChange}
-                        style={{ padding: "10px", border: "1px solid #e2e8f0", borderRadius: "6px", backgroundColor: "#f8fafc" }}
-                    />
-                </div>
-                
-                <button type="submit" disabled={carregando}>
-                    {carregando ? "Salvando imagem e publicando..." : "Publicar História"}
-                </button>
-            </form>
+            {imagemFile && (
+              <p className="form-file-name">
+                Arquivo selecionado: {imagemFile.name}
+              </p>
+            )}
+          </div>
         </div>
-    );
+
+        <button
+          className="btn btn-primary"
+          type="submit"
+          disabled={carregando}
+        >
+          {carregando
+            ? "Salvando imagem e publicando..."
+            : "Publicar história"}
+        </button>
+
+        {erro && <p className="form-message msg-erro">{erro}</p>}
+      </form>
+    </section>
+  );
 }

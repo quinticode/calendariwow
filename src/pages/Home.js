@@ -1,24 +1,32 @@
-import { use, useState } from "react";
-import TextoLegal from "../components/TextoLegal";
-import Contador from "../components/Contador";
 import { Link } from "react-router-dom";
+import TextoLegal from "../components/TextoLegal";
 
-export default function Home(){
-    const [contador, setContador] = useState(0);
+export default function Home() {
+  return (
+    <section className="home-page">
+      <div className="home-hero">
+        <TextoLegal tamanho="clamp(3.5rem, 12vw, 9rem)" conteudo="Historiólas ;)" />
 
-    return (
-    <>
-      <TextoLegal tamanho={"9rem"} conteudo={"Historiólas ;)"}/>
-      <TextoLegal tamanho={"3rem"} conteudo={"Compartilhe e leia histórias!"}/>
+        <TextoLegal
+          tamanho="clamp(1.4rem, 4vw, 3rem)"
+          conteudo="Compartilhe e leia histórias!"
+        />
 
+        <p className="home-description">
+          Salve suas histórias, publique suas ideias, veja textos criados
+          por outras pessoas!!!!
+        </p>
 
-      {/* <Contador valor={contador} setValor={setContador} emoji="Aumentar" modo="incremento"/>
-      <Contador valor={contador} setValor={setContador} emoji="Diminuir" modo="decremento"/> */}
-      <p style={{fontSize:"1.5rem"}}>Salve suas histórias! Comece criando sua conta!</p>
+        <div className="home-actions">
+          <Link className="btn btn-primary home-button" to="/registrar">
+            Criar conta
+          </Link>
 
-      <Link to="/registrar"><button>Registrar Conta</button></Link>
-      <Link to="/login"><button>Logar conta</button></Link>
-
-    </>
-    )
+          <Link className="btn btn-outline home-button" to="/login">
+            Entrar na conta
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
 }
