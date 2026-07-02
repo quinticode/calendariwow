@@ -1,122 +1,148 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import TextoLegal from "../components/TextoLegal";
 import { registrarUsuario } from "../services/registrarService";
 import { Link } from "react-router-dom";
 
+export default function FormRegistrar() {
+  const dadosPadrao = {
+    nome: "",
+    email: "",
+    senha: ""
+  };
 
-export default function FormRegistrar(){
+  const [formDados, setFormDados] = useState(dadosPadrao);
+  const [enviado, setEnviado] = useState(false);
+  const [erro, setErro] = useState("");
+  const [carregando, setCarregando] = useState(false);
 
-    useEffect(() => {handleReset()},[])
+  function handleChange(e) {
+    const { name, value } = e.target;
 
-    const dadosPadrao = {
-        nome: "",
-        email: "",
-        senha: ""
+    setFormDados((anterior) => ({
+      ...anterior,
+      [name]: value
+    }));
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    setErro("");
+    setCarregando(true);
+
+    try {
+      await registrarUsuario(formDados);
+      setEnviado(true);
+    } catch (err) {
+      setErro(err.message);
+    } finally {
+      setCarregando(false);
     }
-    
-    const [formDados, setFormDados] = useState(dadosPadrao);
+  }
 
-    const [enviado, setEnviado] = useState(false);
-    const [erro, setErro] = useState("");
-    const [carregando, setCarregando] = useState(false);
+  function handleReset() {
+    setFormDados(dadosPadrao);
+    setEnviado(false);
+    setErro("");
+  }
 
-    // pega o ""objeto"" do evento de quando alguem digita, salva as informações q tao na const
-    //
+  if (enviado) {
+    return (
+      <section className="form-card">
+        <TextoLegal conteudo="Cadastro realizado!" tamanho="2rem" />
 
-    function handleChange(e) {
-        const { name, value, type, checked } = e.target;
-        setFormDados((anterior) => ({
-            ...anterior,
-            [name]: type === "checkbox" ? checked : value, 
-        }));
-    }
+        <p className="form-message msg-sucesso">
+          {formDados.nome}, seu e-mail {formDados.email} foi registrado com
+          sucesso!
+        </p>
 
-    async function handleSubmit(e) {
+        <Link className="btn btn-primary" to="/historias">
+          Ver histórias!
+        </Link>
 
-        e.preventDefault();
-        setErro("");
-        setCarregando(true);
+        <button
+          className="btn btn-secondary"
+          type="button"
+          onClick={handleReset}
+        >
+          Fazer outro cadastro
+        </button>
+      </section>
+    );
+  }
 
-        try {
-            await registrarUsuario(formDados);
-            setEnviado(true);
-        } catch (err) {
-            setErro(err.message);
-        } finally {
-            setCarregando(false);
-        }
-    }
+  return (
+    <section className="form-page">
+      <TextoLegal conteudo="Cadastre-se!" tamanho="2rem" />
 
-    function handleReset() {
-        setFormDados(dadosPadrao)
-        setEnviado(false)
-        setErro("");
-    }
+      <form className="form-card" onSubmit={handleSubmit}>
+        <div className="form-fields">
+          <div className="form-group">
+            <label className="form-label" htmlFor="nome">
+              Nome
+            </label>
 
-    if(enviado){
-        return(
-            <div>
-                <TextoLegal conteudo="Cadastro Realizado!" tamanho="5rem" />
-                <p style={{color: "green" }}>{formDados.nome}, seu email {formDados.email} foi registrado com sucesso! </p>
-                <Link to="/historias"><button>Ver histórias!</button></Link>
-            </div>
-        )
-    }
+            <input
+              className="form-input"
+              type="text"
+              id="nome"
+              name="nome"
+              value={formDados.nome}
+              onChange={handleChange}
+              placeholder="Digite seu nome"
+              required
+            />
+          </div>
 
-    return(
-        <div>
-            <TextoLegal conteudo="Cadastre-se!" tamanho="4rem"/>
+          <div className="form-group">
+            <label className="form-label" htmlFor="email">
+              E-mail
+            </label>
 
-            {erro && <p style={{color: "red" }}>{erro}</p>}
+            <input
+              className="form-input"
+              type="email"
+              id="email"
+              name="email"
+              value={formDados.email}
+              onChange={handleChange}
+              placeholder="Digite seu e-mail"
+              required
+            />
+          </div>
 
-            <form onSubmit={handleSubmit}>
-                <div>
+          <div className="form-group">
+            <label className="form-label" htmlFor="senha">
+              Senha
+            </label>
 
-                    <label htmlFor="nome">Nome:</label>
-                    <input
-                        type="text"
-                        id="nome"
-                        name="nome"
-                        value={formDados.nome}
-                        onChange={handleChange}
-                        placeholder="digite seu nome"
-                    />
-
-                    <label htmlFor="email">Email:</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formDados.email}
-                        onChange={handleChange}
-                        placeholder="digite seu email"
-                    />
-
-                    <label htmlFor="senha">senha:</label>
-                    <input
-                        type="senha"
-                        id="senha"
-                        name="senha"
-                        value={formDados.senha}
-                        onChange={handleChange}
-                        placeholder="digite sua senha"
-                    />
-
-                </div>
-
-                <button type="submit">Registrar</button>
-            </form>
-
-            <Link to="/login"><h4>Já possui uma conta?</h4></Link>
-
-            {/* 
-            <div>
-                <TextoLegal tamanho="1rem" conteudo="conteudo do formulario"/>
-                <pre>{JSON.stringify(formDados, null, 2)}</pre>
-            </div>
-            */}
-
+            <input
+              className="form-input"
+              type="password"
+              id="senha"
+              name="senha"
+              value={formDados.senha}
+              onChange={handleChange}
+              placeholder="Digite sua senha"
+              required
+            />
+          </div>
         </div>
-       
-    )
+
+        <button
+          className="btn btn-primary"
+          type="submit"
+          disabled={carregando}
+        >
+          {carregando ? "Registrando..." : "Registrar"}
+        </button>
+
+        {erro && <p className="form-message msg-erro">{erro}</p>}
+      </form>
+
+      <p className="form-login-link">
+        Já possui uma conta? <Link to="/login">Entrar</Link>
+      </p>
+    </section>
+  );
 }
