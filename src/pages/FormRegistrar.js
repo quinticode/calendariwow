@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 export default function FormRegistrar() {
   const dadosPadrao = {
     nome: "",
+    apelido: "",
     email: "",
     senha: ""
   };
@@ -90,6 +91,22 @@ export default function FormRegistrar() {
               value={formDados.nome}
               onChange={handleChange}
               placeholder="Digite seu nome"
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label" htmlFor="apelido">
+              Apelido
+            </label>
+
+            <input
+              className="form-input"
+              type="text"
+              id="apelido"
+              name="apelido"
+              value={formDados.apelido}
+              onChange={handleChange}
+              placeholder="Digite seu apelido"
             />
           </div>
 

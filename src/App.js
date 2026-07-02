@@ -13,6 +13,7 @@ import UploadPage from './pages/UploadPage';
 import HistoriasPage from './pages/HistoriasPage';
 import FormHistoria from './pages/FormHistoria';
 import LerHistoria from './pages/LerHistoria';
+import SalaDeEstar from './pages/SalaDeEstar';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path='login' element={<LoginPage />} />
             <Route path='historias' element={<HistoriasPage />} />
             <Route path='historia/:id' element={<LerHistoria />} />
+            <Route path='saladeestar' element={<SalaDeEstar />} />
 
           {/* rotas privadas */}
             <Route 

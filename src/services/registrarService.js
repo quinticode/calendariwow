@@ -31,12 +31,16 @@ function validarDados(dados){
     if (!dados.nome?.trim())
         erros.push("Nome é obrigatório!")
 
+    if (!dados.apelido?.trim())
+        erros.push("Apelido é obrigatório!")
+
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(dados.email))
         erros.push("Email inválido!")
 
     if (!regexSenha.test(dados.senha)) {
         erros.push("A senha precisa de números e letras!")
     }
+
 
     if (erros.length > 0)
         throw new Error(erros.join(" ; "));

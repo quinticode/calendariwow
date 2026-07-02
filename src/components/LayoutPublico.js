@@ -34,6 +34,7 @@ export default function LayoutPublico() {
           <Link to="/sobre" className="nav-item">Sobre</Link>
           <Link to="/historias" className="nav-item">Histórias</Link>
           <Link to="/usuarios" className="nav-item">Usuários</Link>
+          <Link to="/saladeestar" className="nav-item">SalaDeEstar</Link>
 
             {/*se ta logado só aparece + isso */}
           {estaLogado ? (

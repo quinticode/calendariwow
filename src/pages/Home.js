@@ -1,7 +1,11 @@
 import { Link } from "react-router-dom";
 import TextoLegal from "../components/TextoLegal";
+import { Saudacao } from "./SalaDeEstar"
+import { useEffect } from 'react';
 
 export default function Home() {
+  useEffect(() => {console.log("o componente foi montado na tela!")},[])
+
   return (
     <main className="home">
       <section className="home__content">
@@ -20,6 +24,7 @@ export default function Home() {
           <Link className="btn btn-outline" to="/login">
             Entrar na conta
           </Link>
+
         </div>
       </section>
     </main>
