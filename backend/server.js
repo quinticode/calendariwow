@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const multer = require("multer");
 const path = require("path");
+const bcrypt = require("bcryptjs");
 
 const database = require("./database/database");
 const Usuario = require("./models/Usuario")
@@ -83,6 +84,8 @@ const usuarioFake = {
     senha: "123456"
 };
 
+// ROTAS DE FETCH
+
 app.post("/registrar", async (req, res) => {
     try {
         const { nome, email, senha } = req.body;
@@ -93,7 +96,9 @@ app.post("/registrar", async (req, res) => {
             return res.status(400).json({ erro: "Este e-mail já está cadastrado." })
         }
 
-        const novoUsuario = await Usuario.create({nome, email, senha });
+        const senhaCriptografada = await bcrypt.hash(senha, 10);
+
+        const novoUsuario = await Usuario.create({nome, email, senha: senhaCriptografada });
         res.json({ sucesso: true, mensagem: "Usuário cadastrado com sucesso!"});
     } catch (error) {
         res.status(500).json({ erro: "Erro ao salvar no banco de dados." });
@@ -109,6 +114,11 @@ app.post("/login", async (req, res) => {
         return res.status(401).json({ erro: "Usuário ou senha inválidos."});
     }
 
+    const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
+    if (!senhaCorreta) {
+            return res.status(401).json({ erro: "Usuário ou senha inválidos." });
+    }
+    
     const token = jwt.sign({email: usuario.email }, SECRET, { expiresIn: "1h" })
     res.json({ token })
 });
