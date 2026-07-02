@@ -15,6 +15,7 @@ export default function LayoutPublico() {
           <Link to="/registrar" className="nav-item">Registrar</Link>
           <Link to="/login" className="nav-item">Login</Link>
           <Link to="/usuarios" className="nav-item">Usuários</Link>
+          <Link to="/historias" className="nav-item">Histórias</Link>
         </nav>
       </header>
 

@@ -7,7 +7,8 @@ const path = require("path");
 const bcrypt = require("bcryptjs");
 
 const database = require("./database/database");
-const Usuario = require("./models/Usuario")
+const Usuario = require("./models/Usuario");
+const Historia = require("./models/Historia");
 
 database.sync()
 
@@ -140,5 +141,20 @@ app.get("/historias", async (req, res) => {
         res.json(historias);
     } catch (error) {
         res.status(500).json({ erro: "Erro ao carregar histórias." });
+    }
+});
+
+//pagina da historia individual
+app.get("/historias/:id", async (req, res) => {
+    try {
+
+        const historia = await Historia.findByPk(req.params.id);
+        
+        if (!historia) {
+            return res.status(404).json({ erro: "História não encontrada." });
+        }
+        res.json(historia);
+    } catch (error) {
+        res.status(500).json({ erro: "Erro ao buscar a história." });
     }
 });

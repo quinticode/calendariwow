@@ -1,0 +1,1 @@
+// aqui eu preciso que faça a validaçõa das coisas, parecido com o registrar service, mas para histórias.

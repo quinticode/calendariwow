@@ -7,8 +7,19 @@ export default function HistoriasPage() {
     useEffect(() => {
         fetch("http://localhost:3001/historias")
             .then(resposta => resposta.json())
-            .then(dados => setHistorias(dados))
-            .catch(erro => console.log("Erro ao buscar:", erro));
+            .then(dados => {
+                if (Array.isArray(dados)) {
+                    setHistorias(dados);
+                } 
+                else {
+                    console.error("O servidor enviou um erro em vez de uma lista:", dados);
+                    setHistorias([]); 
+                }
+            })
+            .catch(erro => {
+                console.log("Erro ao conectar com o servidor:", erro);
+                setHistorias([]); 
+            });
     }, []);
 
     return (
@@ -34,7 +45,9 @@ export default function HistoriasPage() {
                             <p style={{ fontSize: "0.8rem", color: "gray", marginBottom: "10px" }}>Por: {historia.autor}</p>
                             <p style={{ fontSize: "0.9rem" }}>Gênero: {historia.genero}</p>
                             
-                            <button style={{ marginTop: "15px", backgroundColor: "#2c3e50" }}>Ler História</button>
+                            <Link to={`/historia/${historia.id}`}>
+                                <button style={{ marginTop: "15px", backgroundColor: "#2c3e50" }}>Ler História</button>
+                            </Link>
                         </div>
                     ))
                 )}
