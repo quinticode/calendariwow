@@ -14,6 +14,7 @@ export default function Home(){
       <Contador valor={contador} setValor={setContador} emoji="Diminuir" modo="decremento"/>
 
       <Link to="/registrar"><button>Registrar Conta</button></Link>
+      <Link to="/login"><button>Logar conta</button></Link>
 
     </>
     )
