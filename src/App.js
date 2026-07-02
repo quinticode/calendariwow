@@ -6,6 +6,7 @@ import Sobre from './pages/Sobre'
 import { BrowserRouter, Route, Routes, Outlet,  } from 'react-router-dom';
 import LayoutPublico from './components/LayoutPublico';
 import FormRegistrar from './pages/FormRegistrar';
+import UsuariosPage from './pages/UsuariosPage';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path='home' element={<Home />} />
             <Route path='sobre' element={<Sobre />} />
             <Route path='registrar' element={<FormRegistrar/>} />
+            <Route path='usuarios' element={<UsuariosPage />} />
           </Route>
         </Routes>
         
