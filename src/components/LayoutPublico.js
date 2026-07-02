@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom'; // 💡 Importamos o useLocation
 
 export default function LayoutPublico() {
   const navigate = useNavigate();
+  const location = useLocation(); 
   const [estaLogado, setEstaLogado] = useState(false);
 
-  // Monitoriza o estado do login sempre que a página carrega ou muda
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -13,20 +13,18 @@ export default function LayoutPublico() {
     } else {
       setEstaLogado(false);
     }
-  }, []);
+  }, [location]);
 
-  // Função para limpar o token e desconectar
   function handleLogout() {
     localStorage.removeItem('token');
     setEstaLogado(false);
-    alert("Você saiu da sua conta.");
+    // alert("Você saiu da sua conta.");
     navigate('/login');
   }
 
   return (
     <>
       <header className="app-header">
-        {/* 💡 Logo alterada aqui para refletir o novo tema do site */}
         <Link to="/" className="app-logo">
           Historiólas ;)
         </Link>
@@ -37,16 +35,15 @@ export default function LayoutPublico() {
           <Link to="/historias" className="nav-item">Histórias</Link>
           <Link to="/usuarios" className="nav-item">Usuários</Link>
 
-          {/* se tiver logado, mostra o botão de sair */}
+            {/*se ta logado só aparece + isso */}
           {estaLogado ? (
             <button onClick={handleLogout} className="btn-logout">
-              Sair
+              <Link to="/login" className="nav-item">Sair</Link>
             </button>
           ) : (
-            // se n estiver logado, mostra os dois normais
             <>
               <Link to="/registrar" className="nav-item">Registrar</Link>
-              <Link to="/login" className="nav-item">Login</Link>
+              <Link to="/login" className="nav-item">Entrar</Link>
             </>
           )}
         </nav>
